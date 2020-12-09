@@ -1,4 +1,4 @@
-function newtonscradle
+function untitled2
     % Pendulum Simulation
     % 
     % 
@@ -85,19 +85,19 @@ end
   % specified plot type.
 function x1_Callback(source,eventdata) 
       % Determine the selected data set.
-      
+       x1_initial = app.Slider.Value;
 end
 function v1_Callback(source,eventdata) 
       % Determine the selected data set.
-      
+      x2_initial = app.Slider.Value;
 end
 function x2_Callback(source,eventdata) 
       % Determine the selected data set.
-      
+      x1_initial = app.Slider.Value;
 end
 function v2_Callback(source,eventdata) 
       % Determine the selected data set.
-      
+      x1_initial = app.Slider.Value;
 end
   function startbutton_Callback(source,eventdata) 
   % Display surf plot of the currently selected data.
@@ -113,9 +113,10 @@ end
         axis equal;
         xlim([-1 1]);
         ylim([-1 0.1]);
-
         r = 0.02; % radius
         l = 0.6; % length
+        m1 = 1; %mass1
+        m2 = 0.5;  %mass2
 
         p1_offset = [r; 0];
         p2_offset = [-r; 0];
@@ -133,12 +134,12 @@ end
         indicatorValue = 0;
         for k = 1 : length(timespan)
             a1 = -(g*sin(x1));
-            v1 = v1 + a1 * ts;
-            x1 = x1 + v1 * ts;
+            v1 = v1 + a1 * ts;            
+            x1 = x1 + (v1/l) * ts;
     
-            a2 = -(g*sin(x2))/l;
+            a2 = -(g*sin(x2));                                                                                                                                            
             v2 = v2 + a2 * ts;
-            x2 = x2 + v2 * ts;
+            x2 = x2 + (v2/l) * ts;
     
             p1 = [l*sin(x1); -l*cos(x1)] + p1_offset;
             p2 = [l*sin(x2); -l*cos(x2)] + p2_offset;
@@ -146,8 +147,8 @@ end
             if norm(p1-p2) < 2*r
                 if indicatorValue == 0
                     v3 = v1;
-                    v1 = v2 * elastic;
-                    v2 = v3 * elastic;
+                    v1 = v2 * elastic * m1 / m2 ;
+                    v2 = v3 * elastic * m2 / m1;
                     indicatorValue = 1;
                 end
             else
