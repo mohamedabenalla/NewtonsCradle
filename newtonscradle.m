@@ -12,19 +12,19 @@ function untitled2
     htextx1  = uicontrol('Style','text','String','Initial Position 1',...
            'Position',[300,225,100,15]);
     hx1 = uicontrol('Style', 'slider',...
-       'Position',[300,210,100,15], 'Callback',@x1_Callback);
+       'Position',[300,210,100,15], 'Callback',@x1_Callback,'Min', 0, 'Max', pi/2);
     htextv1  = uicontrol('Style','text','String','Initial Velocity 1',...
            'Position',[300,190,100,15]);
     hv1 = uicontrol('Style', 'slider', 'Value',0,...
-       'Position',[300,175,100,15], 'Callback',@v1_Callback);
+       'Position',[300,175,100,15], 'Callback',@v1_Callback,'Min', -1, 'Max', 1);
     htextx2  = uicontrol('Style','text','String','Initial Position 2',...
            'Position',[300,155,100,15]);
     hx2 = uicontrol('Style', 'slider',...
-       'Position',[300,140,100,15], 'Callback',@x2_Callback);
+       'Position',[300,140,100,15], 'Callback',@x2_Callback,'Min', -pi/2, 'Max', 0);
     htextv2  = uicontrol('Style','text','String','Initial Velocity 2',...
            'Position',[300,120,100,15]);
     hv2 = uicontrol('Style', 'slider',...
-       'Position',[300,105,100,15], 'Callback',@v2_Callback);
+       'Position',[300,105,100,15], 'Callback',@v2_Callback,'Min', -1, 'Max', 1);
     htext  = uicontrol('Style','text','String','Select Collison',...
            'Position',[300,75,100,15]);
     hpopup = uicontrol('Style','popupmenu',...
@@ -34,12 +34,12 @@ function untitled2
     elastic = 1; %elastic coeffecient
     x1_initial = pi/3;
     v1_initial = 0;
-    x2_initial = -pi/4;
+    x2_initial = 0;
     v2_initial = 0;
     ha = axes('Units','pixels','Position',[50,60,200,185]);
     % off means disappearing
     % distance from left, distance from bottom, width, height
-    align([hstart,htext,hpopup,hx1,hv1,hx2,hv2],'Center','None');
+    align([hstart,htext,hpopup,hx1,hv1,hx2,hv2,htextx1,htextv1,htextx2,htextv2],'Center','None');
     
     % Initialize the UI.
 % Change units to normalized so components resize automatically.
@@ -52,6 +52,10 @@ function untitled2
     hv1.Units  = 'normalized';
     hx2.Units  = 'normalized';
     hv2.Units  = 'normalized';
+    htextx1.Units  = 'normalized';
+    htextv1.Units  = 'normalized';
+    htextx2.Units  = 'normalized';
+    htextv2.Units  = 'normalized';
     % Assign the a name to appear in the window title.
     f.Name = 'Newtons Cradle';
 
@@ -85,19 +89,27 @@ end
   % specified plot type.
 function x1_Callback(source,eventdata) 
       % Determine the selected data set.
-       x1_initial = app.Slider.Value;
+       x1_initial = get(hx1,'value');
+       text = num2str(round(x1_initial,1));
+       set(htextx1,'String', strcat('Initial x1:',text));
 end
 function v1_Callback(source,eventdata) 
       % Determine the selected data set.
-      x2_initial = app.Slider.Value;
+      v1_initial = get(hv1,'value');
+      text = num2str(round(v1_initial,1));
+       set(htextv1,'String', strcat('Initial v1:',text));
 end
 function x2_Callback(source,eventdata) 
       % Determine the selected data set.
-      x1_initial = app.Slider.Value;
+      x2_initial = get(hx2,'value');
+      text = num2str(round(x2_initial,1));
+       set(htextx2,'String', strcat('Initial x2:',text));
 end
 function v2_Callback(source,eventdata) 
       % Determine the selected data set.
-      x1_initial = app.Slider.Value;
+      v2_initial = get(hv2,'value');
+      text = num2str(round(v2_initial,1));
+      set(htextv2,'String', strcat('Initial v2:',text));
 end
   function startbutton_Callback(source,eventdata) 
   % Display surf plot of the currently selected data.
@@ -115,8 +127,8 @@ end
         ylim([-1 0.1]);
         r = 0.02; % radius
         l = 0.6; % length
-        m1 = 1; %mass1
-        m2 = 0.5;  %mass2
+        m1 = 2; %mass1
+        m2 = 2;  %mass2
 
         p1_offset = [r; 0];
         p2_offset = [-r; 0];
